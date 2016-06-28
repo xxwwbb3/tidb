@@ -657,11 +657,13 @@ func (b *planBuilder) unfoldWildStar(p Plan, selectFields []*ast.SelectField) (r
 
 func (b *planBuilder) buildNewSelect(sel *ast.SelectStmt) Plan {
 	hasAgg := b.detectSelectAgg(sel)
-	var aggFuncs []*ast.AggregateFuncExpr
-	var havingMap, orderMap, totalMap map[*ast.AggregateFuncExpr]int
-	var p Plan
-	var gbyCols []expression.Expression
-	var correlated bool
+	var (
+		p                             Plan
+		correlated                    bool
+		aggFuncs                      []*ast.AggregateFuncExpr
+		havingMap, orderMap, totalMap map[*ast.AggregateFuncExpr]int
+		gbyCols                       []expression.Expression
+	)
 	if sel.From != nil {
 		p = b.buildResultSetNode(sel.From.TableRefs)
 	} else {
